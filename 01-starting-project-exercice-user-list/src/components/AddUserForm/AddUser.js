@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import classes from './AddUser.module.css';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
 import ErrorModal from '../ErrorModal/ErrorModal';
+import Wrapper from '../Helpers/Wrapper';
 
 const initialuserData = {
     id: "",
@@ -12,17 +13,25 @@ const initialuserData = {
 
 const AddUser = (props) => {
 
-    const [userData, setUserData] = useState(initialuserData);
+    const nameInputRef = useRef();
+    const ageInputRef = useRef();
+    
     const [error, setError] = useState();
+//  const [userData, setUserData] = useState(initialuserData);
 
     const cleanForm = () => {
-        setUserData(initialuserData)
+        // setUserData(initialuserData)
+        nameInputRef.current.value = '';
+        ageInputRef.current.value = '';
     };
 
     const addUserHandler = (event) => {
         event.preventDefault();
-        if (!userData.name || !userData.age) {
-            
+        const enteredName = nameInputRef.current.value;
+        const enteredAge = ageInputRef.current.value;
+
+        if (!enteredName || !enteredAge) {
+
             setError({
                 title: "Invalid input",
                 message: "Please enter a valid name and age (non-empty values)."
@@ -30,7 +39,7 @@ const AddUser = (props) => {
             return;
         }
 
-        if (+userData.age < 1) {
+        if (+enteredAge < 1) {
             setError({
                 title: "Invalid age",
                 message: "Age must be bigger than 0."
@@ -39,54 +48,54 @@ const AddUser = (props) => {
         }
 
 
-        props.onUserAdded(userData);
+        props.onUserAdded({name: enteredName, age: enteredAge});
+        // props.onUserAdded(userData);
         cleanForm();
     };
 
-    const inputNameChangeHandler = (value) => {
-        setUserData((prevUserData) => {
-            return {
-                id: prevUserData.id,
-                name: value,
-                age: prevUserData.age
-            };
-        });
-    };
+    // const inputNameChangeHandler = (value) => {
+    //     setUserData((prevUserData) => {
+    //         return {
+    //             id: prevUserData.id,
+    //             name: value,
+    //             age: prevUserData.age
+    //         };
+    //     });
+    // };
 
-    const inputAgeChangeHandler = (value) => {
-        setUserData((prevUserData) => {
-            return {
-                id: prevUserData.id,
-                name: prevUserData.name,
-                age: +value
-            };
-        });
-    };
+    // const inputAgeChangeHandler = (value) => {
+    //     setUserData((prevUserData) => {
+    //         return {
+    //             id: prevUserData.id,
+    //             name: prevUserData.name,
+    //             age: +value
+    //         };
+    //     });
+    // };
 
     const errorHandler = () => {
         setError(null);
     };
 
     return (
-        <div>
+        <Wrapper>
             {error && <ErrorModal title={error.title} message={error.message} onOkClick={errorHandler} />}
             <Card className={classes.input}>
                 <form>
                     <label htmlFor="user-name">Username</label>
                     <input type="text" id="user-name"
-                        onChange={(event) => inputNameChangeHandler(event.target.value)}
-                        value={userData.name} />
+                        ref={nameInputRef} /* store the html input element. can be used for reading the value */
+                        />
 
                     <label htmlFor="user-age">Age (Years)</label>
                     <input type="number" id="user-age"
-                        onChange={(event) => inputAgeChangeHandler(event.target.value)}
-                        value={userData.age} />
+                        ref={ageInputRef} /* store the html input element. can be used for reading the value */
+                        />
 
                     <Button onClick={addUserHandler}> Add User</Button>
                 </form>
             </Card>
-        </div>
-
+        </Wrapper>
     );
 };
 
