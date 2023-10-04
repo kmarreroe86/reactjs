@@ -1,4 +1,4 @@
-Current lesson: https://thoughtworks.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/25599224#overview
+Current lesson: https://thoughtworks.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/25599242#overview
 
 
 Create Reacts project:
@@ -10,3 +10,10 @@ Install styled-components (Allows to create components which styles only affects
 Run:
 	npm install
 	npm start
+
+
+Hooks:
+-useSate: Allows you to add state to a functional component, returns an array with two values: the current state and a function to update it
+-useEffect: Allows you to perform side effects in your components, ex of side effects are: fetching data, timers. Take 2 arguments. runs after component evaluation
+			if the dependencies has change
+-useReducer: Similar to useState. Good for complex logic. Takes 3 arg useReducer(<reducer>, <initialState>, <initFn>)
